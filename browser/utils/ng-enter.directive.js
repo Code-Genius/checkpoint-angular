@@ -10,3 +10,7 @@
 
 // if you are curious how this is being used,
 // check out line 6 of todo.item.html.
+
+app.directive('ngEnter', ngEnterDirective = function () {
+  // your code here
+});
