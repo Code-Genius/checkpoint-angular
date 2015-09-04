@@ -35,10 +35,10 @@ describe('`Todo` factory', function () {
     Todo.getOne('xyz123')
       .then(function (todo) {
         expect(todo.title).to.equal('Thing');
-        done();
       })
       .catch(done);
     $httpBackend.flush();
+    done();
   });
 
   it('`.getAll` fetches all backend todos', function (done) {
@@ -48,10 +48,10 @@ describe('`Todo` factory', function () {
     Todo.getAll()
       .then(function (todos) {
         expect(todos).to.have.length(4);
-        done();
       })
       .catch(done);
     $httpBackend.flush();
+    done();
   });
 
   it('`.destroy` deletes an existing backend todo', function (done) {
@@ -59,9 +59,9 @@ describe('`Todo` factory', function () {
       .expect('DELETE', '/api/todos/abc123')
       .respond(204);
     Todo.destroy('abc123')
-      .then(function(){ done(); })
       .catch(done);
     $httpBackend.flush();
+    done();
   });
 
   it('`.add` creates a new backend todo', function (done) {
@@ -71,10 +71,10 @@ describe('`Todo` factory', function () {
     Todo.add({title: 'ThingX'})
       .then(function (todo) {
         expect(todo._id).to.equal('123');
-        done();
       })
       .catch(done);
     $httpBackend.flush();
+    done();
   });
 
   it('`.update` updates an existing backend todo', function (done) {
@@ -84,10 +84,10 @@ describe('`Todo` factory', function () {
     Todo.update('def123', {complete: true})
       .then(function (todo) {
         expect(todo.complete).to.equal(true);
-        done();
       })
       .catch(done);
     $httpBackend.flush();
+    done();
   });
 
   /*------------------
@@ -113,10 +113,10 @@ describe('`Todo` factory', function () {
       Todo.getAll()
         .then(function (all) {
           cachedTodos = all;
-          done();
         })
         .catch(done);
       $httpBackend.flush();
+      done();
     });
 
     it('addition adds to cache', function (done) {
