@@ -58,6 +58,8 @@ describe('Todos list', function () {
         expect($scope.filterByCompleted).to.equal(true);
         $scope.setCategory('active');
         expect($scope.filterByCompleted).to.equal(false);
+        $scope.setCategory('all');
+        expect($scope.filterByCompleted).to.equal('');
       });
 
     });
