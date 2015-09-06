@@ -85,6 +85,7 @@ describe('Todos list', function () {
 
       it('uses the `Todo` factory', function () {
         $scope.addTodo();
+        // confused where `$scope.toAdd` is coming from? See `todo.list.html`.
         expect(Todo.add).to.have.been.called.once.with($scope.toAdd);
       });
 
