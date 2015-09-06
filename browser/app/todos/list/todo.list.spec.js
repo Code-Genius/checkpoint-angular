@@ -141,10 +141,10 @@ describe('Todos list', function () {
       // check that the results are being returned correctly
       result.then(function(todos){
         expect(todos).to.eql([{_id: 'a'}, {_id: 'b'}]);
-        done();
       }).catch(done);
       // test framework stuff: force $q promises to settle
       $rootScope.$digest();
+      done();
     });
 
   });

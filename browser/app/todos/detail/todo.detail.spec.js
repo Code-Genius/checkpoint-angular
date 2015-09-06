@@ -75,10 +75,10 @@ describe('Todos detail', function () {
       // check that the results are being returned correctly
       result.then(function(todo){
         expect(todo).to.eql({ _id: uniqueId });
-        done();
       }).catch(done);
       // test framework stuff: makes settled $q promise call handler
       $rootScope.$digest();
+      done();
     });
 
   });
