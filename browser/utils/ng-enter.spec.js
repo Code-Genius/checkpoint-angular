@@ -43,7 +43,7 @@ xdescribe('ng-enter directive', function () {
       // non-enter key
       keyPressEvent.which = 10;
       element.trigger(keyPressEvent);
-      expect(scope.doSomething).not.to.have.been.called;
+      expect(scope.doSomething).not.to.have.been.called();
       // enter key
       keyPressEvent.which = 13;
       element.trigger(keyPressEvent);
