@@ -58,6 +58,8 @@ describe('Todo edit', function () {
 
       it("goes to the todo's detail state after it has been updated", function () {
         $scope.keepChanges();
+        // don't transition yet; the `update` promise hasn't settled!
+        expect($state._mockUrl).not.to.equal('/todos/456');
         // use `$state.go` to make this work.
         // We modified `$state.go` to change `$state._mockUrl`
         // instead of actually transitioning to a new state.

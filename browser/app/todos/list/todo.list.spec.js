@@ -92,6 +92,8 @@ describe('Todos list', function () {
       // feel free to return here once you've defined the edit state
       it("goes to the todo's edit state after it has been added", function () {
         $scope.addTodo();
+        // don't transition yet; the `add` promise hasn't settled!
+        expect($state._mockUrl).not.to.equal('/todos/123/edit');
         // use `$state.go` to make this work.
         // We modified `$state.go` to change `$state._mockUrl`
         // instead of actually transitioning to a new state.

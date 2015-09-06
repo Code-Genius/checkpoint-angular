@@ -100,6 +100,8 @@ describe('Todo item', function () {
       it('after removal, goes to the `todos` state', function () {
         $scope.theTodo = { _id: 'abc123' };
         $scope.removeTodo();
+        // don't transition yet; the `destroy` promise hasn't settled!
+        expect($state._mockUrl).not.to.equal('/todos');
         // use `$state.go` to make this work.
         // We modified `$state.go` to change `$state._mockUrl`
         // instead of actually transitioning to a new state.
