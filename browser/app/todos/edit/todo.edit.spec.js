@@ -77,10 +77,11 @@ describe('Todo edit', function () {
 
   describe('state', function () {
 
-    var Todo, $state, $rootScope;
-    beforeEach(inject(function ($q, _$state_, _$rootScope_) {
+    var Todo, $state, $rootScope, $injector;
+    beforeEach(inject(function ($q, _$state_, _$rootScope_, _$injector_) {
       $state = _$state_;
       $rootScope = _$rootScope_;
+      $injector = _$injector_;
       // a fake Todo factory (doesn't rely on your Todo factory)
       // `getOne` method returns a promise for object with an `_id`
       Todo = {
@@ -104,11 +105,15 @@ describe('Todo edit', function () {
       var todoEditState = $state.get('todos.edit');
       var fn = todoEditState.resolve.todo;
       expect(fn).to.be.a('function');
-      // check that the `Todo` factory is used to fetch a todo
+      // inject our test objects into the resolve function and capture return
       var uniqueId = {};
-      var result = fn(Todo, { id: uniqueId });
+      var result = $injector.invoke(fn, null, {
+        Todo: Todo,
+        $stateParams: { id: uniqueId }
+      });
+      // check the `Todo` factory was used in the func to fetch a specific todo
       expect(Todo.getOne).to.have.been.called.once.with(uniqueId);
-      // check that the results are being returned correctly
+      // check that the function returned the right thing
       result.then(function(todo){
         expect(todo).to.eql({ _id: uniqueId });
       }).catch(done);

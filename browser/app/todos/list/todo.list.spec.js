@@ -111,10 +111,11 @@ describe('Todos list', function () {
 
   describe('state `todos`', function () {
 
-    var Todo, $state, $rootScope;
-    beforeEach(inject(function ($q, _$state_, _$rootScope_) {
+    var Todo, $state, $rootScope, $injector;
+    beforeEach(inject(function ($q, _$state_, _$rootScope_, _$injector_) {
       $state = _$state_;
       $rootScope = _$rootScope_;
+      $injector = _$injector_;
       // a fake Todo factory (doesn't rely on your Todo factory)
       // `getAll` method returns a promise for objects with `_id`s
       Todo = {
@@ -138,10 +139,13 @@ describe('Todos list', function () {
       var todoListState = $state.get('todos');
       var fn = todoListState.resolve.todos;
       expect(fn).to.be.a('function');
-      // check that the `Todo` factory is used to fetch todos
-      var result = fn(Todo);
+      // inject our test objects into the resolve function and capture return
+      var result = $injector.invoke(fn, null, {
+        Todo: Todo
+      });
+      // check that the `Todo` factory was used in the function to fetch todos
       expect(Todo.getAll).to.have.been.called.once;
-      // check that the results are being returned correctly
+      // check that the function returned the right thing
       result.then(function(todos){
         expect(todos).to.eql([{_id: 'a'}, {_id: 'b'}]);
       }).catch(done);
