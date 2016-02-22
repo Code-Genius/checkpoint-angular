@@ -12,7 +12,7 @@ middleware.use(express.static(publicPath));
 var browserPath = path.join(rootPath, 'browser');
 middleware.use(express.static(browserPath));
 
-var bowerPath = path.join(rootPath, 'bower_components');
-middleware.use(express.static(bowerPath));
+var nodeModulesPath = path.join(rootPath, 'node_modules');
+middleware.use(express.static(nodeModulesPath));
 
 module.exports = middleware;

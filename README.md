@@ -12,7 +12,7 @@
 ## Getting started
 
 - Fork this repo then clone your fork locally.
-- `npm install && bower install`
+- `npm install`
 - `npm test` (which starts up testem)
 - Open up [localhost:7357](http://localhost:7357) to view the full HTML report.
 - Start going through the specs.
