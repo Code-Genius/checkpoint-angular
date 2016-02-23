@@ -48,8 +48,12 @@ describe('`Todo` factory', function () {
   }));
   // checks that $httpBackend received and handled all expected calls
   afterEach(function(){
-    $httpBackend.verifyNoOutstandingExpectation(false);
-    $httpBackend.verifyNoOutstandingRequest();
+    try {
+      $httpBackend.verifyNoOutstandingExpectation(false);
+      $httpBackend.verifyNoOutstandingRequest();
+    } catch (err) {
+      this.test.error(err);
+    }
   });
 
   /*------------------
