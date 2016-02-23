@@ -2,6 +2,27 @@
 /* globals module inject chai */
 var expect = chai.expect;
 
+// randomization to prevent hard-coding
+
+function randomNum (upperBound) {
+  return Math.floor(Math.random() * upperBound);
+}
+
+function makeFakeTodo () {
+  return {
+    _id: 'xyz' + randomNum(1000),
+    title: 'Thing' + randomNum(1000)
+  };
+}
+
+function makeFakeTodos () {
+  var fakeTodos = new Array(randomNum(8) + 3);
+  for (var i = 0; i < fakeTodos.length; i++) fakeTodos[i] = makeFakeTodo();
+  return fakeTodos;
+}
+
+// tests proper
+
 describe('`Todo` factory', function () {
 
   /*------------------
@@ -13,14 +34,21 @@ describe('`Todo` factory', function () {
 
   // the `Todo` factory will be loaded before each test
   // $httpBackend lets us "stub" $http responses
-  var Todo, $httpBackend;
+  // fakeResTodo is a modified copy of fakeReqTodo (a randomized todo object)
+  var Todo, $httpBackend, fakeReqTodo, fakeResTodo;
   beforeEach(inject(function ($injector) {
     Todo = $injector.get('Todo');
     $httpBackend = $injector.get('$httpBackend');
+    fakeReqTodo = makeFakeTodo();
+    fakeResTodo = {
+      _id: fakeReqTodo._id,
+      title: fakeReqTodo.title,
+      modification: randomNum(1000)
+    };
   }));
   // checks that $httpBackend received and handled all expected calls
   afterEach(function(){
-    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingExpectation(false);
     $httpBackend.verifyNoOutstandingRequest();
   });
 
@@ -30,11 +58,11 @@ describe('`Todo` factory', function () {
 
   it('`.getOne` fetches a backend todo by id', function (done) {
     $httpBackend
-      .expect('GET', '/api/todos/xyz123')
-      .respond(200, {title: 'Thing'});
-    Todo.getOne('xyz123')
+      .expect('GET', '/api/todos/' + fakeReqTodo._id)
+      .respond(200, fakeResTodo);
+    Todo.getOne(fakeReqTodo._id)
       .then(function (todo) {
-        expect(todo.title).to.equal('Thing');
+        expect(todo).to.deep.equal(fakeResTodo);
       })
       .catch(done);
     $httpBackend.flush();
@@ -42,12 +70,13 @@ describe('`Todo` factory', function () {
   });
 
   it('`.getAll` fetches all backend todos', function (done) {
+    var fakeTodos = makeFakeTodos();
     $httpBackend
       .expect('GET', '/api/todos')
-      .respond(200, [{}, {}, {}, {}]);
+      .respond(200, fakeTodos);
     Todo.getAll()
       .then(function (todos) {
-        expect(todos).to.have.length(4);
+        expect(todos).to.deep.equal(fakeTodos);
       })
       .catch(done);
     $httpBackend.flush();
@@ -56,9 +85,9 @@ describe('`Todo` factory', function () {
 
   it('`.destroy` deletes an existing backend todo', function (done) {
     $httpBackend
-      .expect('DELETE', '/api/todos/abc123')
+      .expect('DELETE', '/api/todos/' + fakeReqTodo._id)
       .respond(204);
-    Todo.destroy('abc123')
+    Todo.destroy(fakeReqTodo._id)
       .catch(done);
     $httpBackend.flush();
     done();
@@ -66,11 +95,11 @@ describe('`Todo` factory', function () {
 
   it('`.add` creates a new backend todo', function (done) {
     $httpBackend
-      .expect('POST', '/api/todos')
-      .respond(201, {_id: '123', title: 'ThingX'});
-    Todo.add({title: 'ThingX'})
+      .expect('POST', '/api/todos', fakeReqTodo)
+      .respond(201, fakeResTodo);
+    Todo.add(fakeReqTodo)
       .then(function (todo) {
-        expect(todo._id).to.equal('123');
+        expect(todo).to.deep.equal(fakeResTodo);
       })
       .catch(done);
     $httpBackend.flush();
@@ -78,12 +107,14 @@ describe('`Todo` factory', function () {
   });
 
   it('`.update` updates an existing backend todo', function (done) {
+    var dueValue = randomNum(777);
+    fakeResTodo.due = dueValue;
     $httpBackend
-      .expect('PUT', '/api/todos/def123')
-      .respond(200, {_id: 'def123', complete: true});
-    Todo.update('def123', {complete: true})
+      .expect('PUT', '/api/todos/' + fakeReqTodo._id, {due: dueValue})
+      .respond(200, fakeResTodo);
+    Todo.update(fakeReqTodo._id, {due: dueValue})
       .then(function (todo) {
-        expect(todo.complete).to.equal(true);
+        expect(todo).to.deep.equal(fakeResTodo);
       })
       .catch(done);
     $httpBackend.flush();
@@ -105,11 +136,7 @@ describe('`Todo` factory', function () {
     beforeEach(function (done) {
       $httpBackend
         .when('GET', '/api/todos')
-        .respond(200, [
-          {title: 'Thing1', _id: 'a1xxxxxxxxxxxxxxxxxxxxxx'},
-          {title: 'Thing2', _id: 'b2xxxxxxxxxxxxxxxxxxxxxx'},
-          {title: 'Thing3', _id: 'c3xxxxxxxxxxxxxxxxxxxxxx'}
-        ]);
+        .respond(200, makeFakeTodos());
       Todo.getAll()
         .then(function (all) {
           cachedTodos = all;
@@ -120,26 +147,30 @@ describe('`Todo` factory', function () {
     });
 
     it('addition adds to cache', function (done) {
-      var fakeObjFromBackend = {title: 'Thing4', _id: 'd4xxxxxxxxxxxxxxxxxxxxxx'};
+      var fakeReqTodo = makeFakeTodo();
+      var fakeResTodo = makeFakeTodo();
       $httpBackend
-        .when('POST', '/api/todos')
-        .respond(201, fakeObjFromBackend);
-      Todo.add()
+        .when('POST', '/api/todos', fakeReqTodo)
+        .respond(201, fakeResTodo);
+      Todo.add(fakeReqTodo)
         .catch(done);
       $httpBackend.flush();
-      expect(cachedTodos.pop().title).to.equal('Thing4');
+      expect(cachedTodos[cachedTodos.length-1]).to.deep.equal(fakeResTodo);
       done();
     });
 
     it('destruction deletes from cache', function (done) {
-      var firstInCache = cachedTodos[0];
+      var doomedTodo = cachedTodos[randomNum(cachedTodos.length)];
+      var cacheMinusDoomedTodo = cachedTodos.filter(function(todo){
+        return todo !== doomedTodo;
+      });
       $httpBackend
-        .when('DELETE', '/api/todos/a1xxxxxxxxxxxxxxxxxxxxxx')
+        .when('DELETE', '/api/todos/' + doomedTodo._id)
         .respond(204);
-      Todo.destroy('a1xxxxxxxxxxxxxxxxxxxxxx')
+      Todo.destroy(doomedTodo._id)
         .catch(done);
       $httpBackend.flush();
-      expect(cachedTodos).to.not.contain(firstInCache);
+      expect(cachedTodos).to.deep.equal(cacheMinusDoomedTodo);
       done();
     });
 

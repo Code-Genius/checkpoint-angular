@@ -11,6 +11,9 @@
 // if you are curious how this is being used,
 // check out line 6 of todo.item.html.
 
+// `ngEnterDirective` is a global used for testing purposes.
+// you would not normally use this kind of syntax, just an inline function.
+
 app.directive('ngEnter', ngEnterDirective = function () {
   // your code here
 });
