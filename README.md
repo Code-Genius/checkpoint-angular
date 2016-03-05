@@ -11,7 +11,7 @@
 
 ## Getting started
 
-- Fork this repo then clone your fork locally.
+- **Fork** this repo then clone your fork locally.
 - `npm install`
 - `npm test` (which starts up testem)
 - Open up [localhost:7357](http://localhost:7357) to view the full HTML report.
@@ -34,7 +34,6 @@
 - `git add -A`
 - `git commit -m "Submission for deadline"`
 - `git push origin master`
-- zip up the folder and email to instructors+assessment@fullstackacademy.com
 
 ## Things you should be aware of
 
