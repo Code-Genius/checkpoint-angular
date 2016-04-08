@@ -22,7 +22,7 @@
 	- browser/app/todos/list/todo.list.controller.js
 	- browser/app/todos/list/todo.list.state.js
 	- browser/app/todos/item/todo.item.directive.js
-	- browser/app/todos/item/todo.controller.js
+	- browser/app/todos/item/todo.item.controller.js
 	- browser/app/todos/detail/todo.detail.controller.js
 	- browser/app/todos/detail/todo.detail.state.js
 	- browser/app/todos/edit/todo.edit.controller.js
