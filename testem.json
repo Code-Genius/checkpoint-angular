@@ -13,6 +13,6 @@
 		"browser/app/todos/detail/todo.detail.spec.js",
 		"browser/app/todos/edit/todo.edit.spec.js",
 		"browser/utils/ng-enter.spec.js",
-		"browser/**/!(*.spec|*.solution).js"
+		"browser/**/*.js"
 	]
 }
