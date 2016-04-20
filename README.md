@@ -2,7 +2,7 @@
 
 ## Logistics
 
-- You have 2.5 hours. This test was designed to be difficult to finish. Get through as much as you can, and if you get stuck on any spec, try moving on – they're not all cumulative.
+- This test was designed to be difficult to finish. Get through as much as you can, and if you get stuck on any spec, try moving on – they're not all cumulative.
 - You may refer to online resources or notes, but *not* any previous code you've written, nor the study guide, nor may you copy/paste from outside resources.
 - There are three extra credit possibilities:
     * The `ng-enter` directive (last spec); `x`'d out to start.
