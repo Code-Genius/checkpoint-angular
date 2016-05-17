@@ -1,4 +1,4 @@
-# Review Week Angular Assessment
+# Angular Checkpoint
 
 ## Logistics
 
