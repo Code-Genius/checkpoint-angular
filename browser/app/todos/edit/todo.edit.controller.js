@@ -3,3 +3,12 @@
 // It should have a scope method `keepChanges` that updates
 // the current todo in the backend and then goes to the
 // current todo's detail state.
+
+app.controller('TodoEditCtrl', function ($scope, todo, Todo, $state){
+  $scope.todo = todo;
+  $scope.keepChanges = function(){
+    Todo.update(todo._id, todo).then( function(todo){
+      $state.go('todos.detail', {id: todo._id})
+    })
+  }
+})

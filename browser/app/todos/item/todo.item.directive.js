@@ -8,4 +8,10 @@
 
 app.directive('todoItem', todoItemDirective = function () {
   // your code here
+  return {
+    restrict: "E",
+    scope: {
+      theTodo: "="
+    }
+  }
 });
